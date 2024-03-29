@@ -6,6 +6,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Project.API.Helpers;
 using Project.Core.Common;
 using Project.Core.Entities.Business;
+using Project.Core.Entities.General;
 using Project.Core.Interfaces.IServices;
 
 namespace Project.API.Controllers.V1
@@ -289,6 +290,7 @@ namespace Project.API.Controllers.V1
         }
 
         [HttpPut]
+        [AllowAnonymous]
         public async Task<IActionResult> Edit(ProductUpdateViewModel model, CancellationToken cancellationToken)
         {
             if (ModelState.IsValid)
@@ -327,6 +329,9 @@ namespace Project.API.Controllers.V1
                 try
                 {
                     await _productService.Update(model, cancellationToken);
+
+                    // Remove data from cache by key
+                    _memoryCache.Remove($"Product_{model.Id}");
 
                     var response = new ResponseViewModel
                     {
@@ -372,6 +377,9 @@ namespace Project.API.Controllers.V1
             try
             {
                 await _productService.Delete(id, cancellationToken);
+                
+                // Remove data from cache by key
+                _memoryCache.Remove($"Product_{id}");
 
                 var response = new ResponseViewModel
                 {
