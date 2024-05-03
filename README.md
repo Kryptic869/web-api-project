@@ -6,7 +6,7 @@ You can visit my blog post- [Web API Project – ASP.NET Core](https://binarybyt
 
 ## Project Structure
 
-The project structure is designed to promote separation of concerns and modularity, making it easier to understand, test, and maintain the application.
+The [project structure](https://binarybytez.com/understanding-clean-architecture/) is designed to promote separation of concerns and modularity, making it easier to understand, test, and maintain the application.
 
 ```
 ├── src
