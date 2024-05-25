@@ -50,7 +50,7 @@ This project template includes the following features:
 
 ## Usage
 
-[The project template](https://binarybytez.com/asp-net-core-web-api-project/) provides a starting point for building RESTful APIs using ASP.NET Core. You can modify and extend the existing code to suit your specific application requirements. Here's an overview of the key components involved in building RESTful APIs:
+The [project template](https://binarybytez.com/asp-net-core-web-api-project/) provides a starting point for building RESTful APIs using ASP.NET Core. You can modify and extend the existing code to suit your specific application requirements. Here's an overview of the key components involved in building RESTful APIs:
 
 1. **Models**: The `Core` project contains the domain models representing the entities you want to perform CRUD operations on. Update the models or add new ones according to your domain.
 2. **Repositories**: The `Infrastructure` project contains repository implementations that handle data access operations using Entity Framework Core. Modify the repositories or create new ones to match your entity models and database structure.
