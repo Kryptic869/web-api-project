@@ -21,7 +21,9 @@ builder.Services.AddMemoryCache();
 // Register ILogger service
 builder.Services.AddLogging(loggingBuilder =>
 {
-    loggingBuilder.AddSeq(builder.Configuration.GetSection("SeqConfig"));
+    loggingBuilder.AddSeq(
+        builder.Configuration.GetSection("AppSettings:SeqConfig")
+        );
 });
 
 // Register Services
