@@ -135,5 +135,16 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllers(); // Map your regular API controllers
 });
 
+app.MapGet("/health", (IHostEnvironment environment) =>
+{
+    return Results.Ok(new
+    {
+        status = "Healthy",
+        environment = environment.EnvironmentName,
+        timestamp = DateTimeOffset.UtcNow
+    });
+})
+.AllowAnonymous();
+
 app.Run();
 
