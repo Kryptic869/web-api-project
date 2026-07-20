@@ -112,18 +112,47 @@ jobs:
 
     steps:
       - name: Download release artifacts
+        id: download-release
         uses: actions/download-artifact@v4
         with:
           name: web-api-test-release
-          path: $({ runner.temp })\web-api-test-release
+          path: $({ runner.temp })/web-api-test-release
 
       - name: Display downloaded artifact structure
+        env:
+          ARTIFACT_PATH: ${{ steps.download-release.outputs.download-path}}
         run: |
-          $artifactPath = Join-Path $env:RUNNER_TEMP "web-api-test-release"
+          Write-Host "Artifact action reported download path:"
+            Write-Host $env:ARTIFACT_PATH
 
-          Write-Host "Artifact downloaded to: $artifactPath"
+            if ([string]::IsNullOrWhiteSpace($env:ARTIFACT_PATH)) {
+                throw "The download action did not return a download path."
+            }
 
-          Get-ChildItem -LiteralPath $artifactPath -Recurse -Force | Select-Object FullName
+            if (-not (Test-Path -LiteralPath $env:ARTIFACT_PATH)) {
+                Write-Host "Runner temp contents:"
+                Get-ChildItem `
+                    -LiteralPath $env:RUNNER_TEMP `
+                    -Force `
+                    -ErrorAction SilentlyContinue |
+                    Select-Object FullName
+
+                Write-Host "Workspace contents:"
+                Get-ChildItem `
+                    -LiteralPath $env:GITHUB_WORKSPACE `
+                    -Recurse `
+                    -Force `
+                    -ErrorAction SilentlyContinue |
+                    Select-Object FullName
+
+                throw "Reported artifact path does not exist: $env:ARTIFACT_PATH"
+            }
+
+            Get-ChildItem `
+                -LiteralPath $env:ARTIFACT_PATH `
+                -Recurse `
+                -Force |
+                Select-Object FullName
 
       - name: Validate deployment configuration
         run: |
@@ -183,18 +212,21 @@ jobs:
           }
 
       - name: Replace deployed application
+        env:
+          ARTIFACT_PATH: ${{ steps.download-release.outputs.download-path }}
         run: |
-          $artifactPath = Join-Path $env:RUNNER_TEMP "web-api-test-release"
+          Write-Host "Using artifact directory: $env:ARTIFACT_PATH"
 
-          $sourcePath = Join-Path $artifactPath "app"
+          $sourcePath = Join-Path $env:ARTIFACT_PATH "app"
 
           if (-not (Test-Path -LiteralPath $sourcePath)) {
             Write-Host "Expected application path was not found."
             Write-Host "Expected: $sourcePath"
+            
             Write-Host "Downloaded artifact contents:"
 
             Get-ChildItem `
-                -LiteralPath $artifactPath `
+                -LiteralPath $env:ARTIFACT_PATH `
                 -Recurse `
                 -Force |
                 Select-Object FullName |
@@ -267,13 +299,24 @@ jobs:
           Write-Host "Test configuration generated successfully."
 
       - name: Apply database migrations
+        env:
+          ARTIFACT_PATH: ${{ steps.download-release.outputs.download-path }}
         run: |
           $migrationBundle =
-              Join-Path $env:RUNNER_TEMP `
-                  "web-api-test-release\database\efbundle.exe"
+              Join-Path $env:ARTIFACT_PATH `
+                  "database\efbundle.exe"
 
           if (-not (Test-Path -LiteralPath $migrationBundle)) {
-              throw "Migration bundle was not downloaded."
+            Write-Host "Actual artifact contents:"
+
+            Get-ChildItem `
+                -LiteralPath $env:ARTIFACT_PATH `
+                -Recurse `
+                -Force |
+                Select-Object FullName |
+                Format-Table -AutoSize
+
+            throw "Migration bundle was not found: $migrationBundle"
           }
 
           & $migrationBundle `
