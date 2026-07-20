@@ -16,9 +16,12 @@ jobs:
       - X64
       - web-api-deploy
 
+    defaults:
+      run:
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
+
     steps:
       - name: Display runner information
-        shell: powershell
         run: |
           Write-Host "Windows account:"
           whoami
@@ -33,7 +36,6 @@ jobs:
           dotnet --list-sdks
 
       - name: Validate Test deployment directory
-        shell: powershell
         run: |
           $deployPath = "C:\Users\mcami\Documents\Apps\WebApi\Test"
 
