@@ -347,7 +347,7 @@ jobs:
               throw "Test configuration file was not deployed. Expected at: $configPath"
           }
 
-          $config = Get-Content - LiteralPath $configPath -Raw | ConvertFrom-Json
+          $config = Get-Content -LiteralPath $configPath -Raw | ConvertFrom-Json
 
           if ($null -eq $config.ConnectionStrings) {
               $config | Add-Member -NotePropertyName ConnectionStrings -NotePropertyValue ([PSCustomObject]@{})
