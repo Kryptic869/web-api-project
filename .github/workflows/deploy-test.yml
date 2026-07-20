@@ -37,6 +37,21 @@ jobs:
       - name: Run automated tests
         run: dotnet test --configuration Release --no-build --logger "trx;LogFileName=test-results.trx"
 
+      - name: Create artifact directories
+        shell: powershell
+        run: |
+          New-Item `
+            -ItemType Directory `
+            -Path "./artifacts/release/app" `
+            -Force |
+            Out-Null
+
+          New-Item `
+            -ItemType Directory `
+            -Path "./artifacts/release/database" `
+            -Force |
+            Out-Null
+
       - name: Publish API
         run: >
           dotnet publish
