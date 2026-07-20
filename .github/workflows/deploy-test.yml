@@ -73,11 +73,11 @@ jobs:
           --output ./artifacts/release/database/efBundle.exe
           --force
 
-      - name: Upload release artifacts
+      - name: Upload release artifact
         uses: actions/upload-artifact@v4
         with:
           name: web-api-test-release
-          path: ./artifacts/release
+          path: ./artifacts/release/*
           if-no-files-found: error
           retention-days: 7
 
@@ -116,6 +116,14 @@ jobs:
         with:
           name: web-api-test-release
           path: $({ runner.temp })\web-api-test-release
+
+      - name: Display downloaded artifact structure
+        run: |
+          $artifactPath = Join-Path $env:RUNNER_TEMP "web-api-test-release"
+
+          Write-Host "Artifact downloaded to: $artifactPath"
+
+          Get-ChildItem -LiteralPath $artifactPath -Recurse -Force | Select-Object FullName
 
       - name: Validate deployment configuration
         run: |
@@ -176,12 +184,24 @@ jobs:
 
       - name: Replace deployed application
         run: |
-          $sourcePath = Join-Path $env:RUNNER_TEMP `
-              "web-api-test-release\app"
+          $artifactPath = Join-Path $env:RUNNER_TEMP "web-api-test-release"
+
+          $sourcePath = Join-Path $artifactPath "app"
 
           if (-not (Test-Path -LiteralPath $sourcePath)) {
-              throw "Published application was not downloaded: $sourcePath"
-          }
+            Write-Host "Expected application path was not found."
+            Write-Host "Expected: $sourcePath"
+            Write-Host "Downloaded artifact contents:"
+
+            Get-ChildItem `
+                -LiteralPath $artifactPath `
+                -Recurse `
+                -Force |
+                Select-Object FullName |
+                Format-Table -AutoSize
+
+            throw "Published application directory was not found."
+            }
 
           New-Item `
               -ItemType Directory `
