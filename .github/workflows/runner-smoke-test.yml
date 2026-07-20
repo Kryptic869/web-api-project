@@ -14,7 +14,7 @@ jobs:
       - self-hosted
       - Windows
       - X64
-      - web-api-project
+      - web-api-deploy
 
     steps:
       - name: Display runner information
