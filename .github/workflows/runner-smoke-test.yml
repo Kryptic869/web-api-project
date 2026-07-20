@@ -37,21 +37,21 @@ jobs:
 
       - name: Validate Test deployment directory
         run: |
-          $deployPath = "C:\Users\mcami\Documents\Apps\WebApi\Test"
+          $deployPath = "C:\Apps\WebApi\Test"
 
-          if (-not (Test-Path $deployPath)) {
-            throw "Deployment directory does not exist: $deployPath"
+          if (-not (Test-Path -LiteralPath $deployPath)) {
+            throw "Deployment directory does not exist or is inaccessible: $deployPath"
           }
 
           $probeFile = Join-Path $deployPath "runner-write-test.txt"
 
           "Runner write test: $(Get-Date -Format o)" | 
-            Set-Content -Path $probeFile
+            Set-Content -LiteralPath $probeFile
 
-          if (-not (Test-Path $probeFile)) {
+          if (-not (Test-Path -LiteralPath $probeFile)) {
             throw "Runner could not write to the deployment directory."
           }
 
-          Remove-Item $probeFile -Force
+          Remove-Item -LiteralPath $probeFile -Force
 
           Write-Host "Runner can read and write to $deployPath"
