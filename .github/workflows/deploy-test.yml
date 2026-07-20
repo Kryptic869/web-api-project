@@ -116,7 +116,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: web-api-test-release
-          path: $({ runner.temp })/web-api-test-release
+          path: ${{ runner.temp }}/web-api-test-release
 
       - name: Display downloaded artifact structure
         env:
@@ -177,17 +177,70 @@ jobs:
 
       - name: Stop Test service
         run: |
-          $service = Get-Service $env:SERVICE_NAME
+          $serviceInfo =
+            Get-CimInstance Win32_Service `
+                -Filter "Name='$env:SERVICE_NAME'"
 
-          if ($service.Status -ne 'Stopped') {
-              Stop-Service $env:SERVICE_NAME -Force
-              $service.WaitForStatus(
-                  [System.ServiceProcess.ServiceControllerStatus]::Stopped,
-                  [TimeSpan]::FromSeconds(30)
-              )
-          }
+          if ($null -eq $serviceInfo) {
+            throw "Windows Service does not exist: $env:SERVICE_NAME"
+            }
 
-          Write-Host "$env:SERVICE_NAME service stopped successfully."
+            $serviceProcessId = [int]$serviceInfo.ProcessId
+
+            Write-Host "Service state: $($serviceInfo.State)"
+            Write-Host "Service process ID: $serviceProcessId"
+
+            if ($serviceInfo.State -ne "Stopped") {
+            Stop-Service `
+                -Name $env:SERVICE_NAME `
+                -Force `
+                -ErrorAction Stop
+            }
+
+            $service =
+            Get-Service `
+                -Name $env:SERVICE_NAME `
+                -ErrorAction Stop
+
+            $service.WaitForStatus(
+            [System.ServiceProcess.ServiceControllerStatus]::Stopped,
+            [TimeSpan]::FromSeconds(30)
+            )
+
+            Write-Host "Service reports Stopped."
+
+            if ($serviceProcessId -gt 0) {
+            $maximumAttempts = 15
+
+            for ($attempt = 1; $attempt -le $maximumAttempts; $attempt++) {
+                $process =
+                Get-Process `
+                    -Id $serviceProcessId `
+                    -ErrorAction SilentlyContinue
+
+                if ($null -eq $process) {
+                Write-Host "Service process has exited."
+                break
+                }
+
+                Write-Host `
+                "Waiting for service process $serviceProcessId to exit. Attempt $attempt/$maximumAttempts"
+
+                Start-Sleep -Seconds 2
+            }
+
+            $remainingProcess =
+                Get-Process `
+                -Id $serviceProcessId `
+                -ErrorAction SilentlyContinue
+
+            if ($null -ne $remainingProcess) {
+                throw `
+                "Service is stopped, but process $serviceProcessId is still running and may be locking deployment files."
+            }
+            }
+
+            Start-Sleep -Seconds 2
 
       - name: Back up current deployment
         run: |
@@ -217,12 +270,17 @@ jobs:
         run: |
           Write-Host "Using artifact directory: $env:ARTIFACT_PATH"
 
+          if ([string]::IsNullOrWhiteSpace($env:ARTIFACT_PATH)) {
+            throw "The artifact download path is empty."
+            }
+
+            if (-not (Test-Path -LiteralPath $env:ARTIFACT_PATH)) {
+            throw "Artifact directory does not exist: $env:ARTIFACT_PATH"
+            }
+
           $sourcePath = Join-Path $env:ARTIFACT_PATH "app"
 
           if (-not (Test-Path -LiteralPath $sourcePath)) {
-            Write-Host "Expected application path was not found."
-            Write-Host "Expected: $sourcePath"
-            
             Write-Host "Downloaded artifact contents:"
 
             Get-ChildItem `
@@ -241,10 +299,37 @@ jobs:
               -Force |
               Out-Null
 
-          Get-ChildItem `
-              -LiteralPath $env:DEPLOY_PATH `
-              -Force |
-              Remove-Item -Recurse -Force
+          $maximumAttempts = 5
+            $deploymentCleared = $false
+
+            for ($attempt = 1; $attempt -le $maximumAttempts; $attempt++) {
+            try {
+                Write-Host `
+                "Clearing existing deployment. Attempt $attempt/$maximumAttempts"
+
+                Get-ChildItem `
+                -LiteralPath $env:DEPLOY_PATH `
+                -Force |
+                Remove-Item `
+                    -Recurse `
+                    -Force `
+                    -ErrorAction Stop
+
+                $deploymentCleared = $true
+                break
+            }
+            catch {
+                Write-Warning $_.Exception.Message
+
+                if ($attempt -lt $maximumAttempts) {
+                Start-Sleep -Seconds 3
+                }
+            }
+            }
+
+            if (-not $deploymentCleared) {
+            throw "Could not clear deployment directory after $maximumAttempts attempts."
+            }
 
           Copy-Item `
               -Path "$sourcePath\*" `
