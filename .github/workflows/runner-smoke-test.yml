@@ -1,0 +1,55 @@
+name: Runner smoke test
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-runner:
+    name: Validate deployment runner
+
+    runs-on:
+      - self-hosted
+      - Windows
+      - X64
+      - web-api-project
+
+    steps:
+      - name: Display runner information
+        shell: powershell
+        run: |
+          Write-Host "Windows account:"
+          whoami
+
+          Write-Host "`nComputer:"
+          hostname
+
+          Write-Host "`nPowerShell version:"
+          $PSVersionTable.PSVersion
+
+          Write-Host "`n.NET SDKs:"
+          dotnet --list-sdks
+
+      - name: Validate Test deployment directory
+        shell: powershell
+        run: |
+          $deployPath = "C:\Users\mcami\Documents\Apps\WebApi\Test"
+
+          if (-not (Test-Path $deployPath)) {
+            throw "Deployment directory does not exist: $deployPath"
+          }
+
+          $probeFile = Join-Path $deployPath "runner-write-test.txt"
+
+          "Runner write test: $(Get-Date -Format o)" | 
+            Set-Content -Path $probeFile
+
+          if (-not (Test-Path $probeFile)) {
+            throw "Runner could not write to the deployment directory."
+          }
+
+          Remove-Item $probeFile -Force
+
+          Write-Host "Runner can read and write to $deployPath"
