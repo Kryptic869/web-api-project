@@ -10,6 +10,13 @@ using Project.Core.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddWindowsService(options =>
+{
+    options.ServiceName =
+        builder.Configuration["WindowsService:ServiceName"]
+        ?? "WebApi";
+});
+
 // Register DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("PrimaryDbConnection")));
