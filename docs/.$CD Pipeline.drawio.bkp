@@ -1,0 +1,61 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.1.2 Chrome/138.0.7204.243 Electron/37.4.0 Safari/537.36" version="28.1.2">
+  <diagram name="Page-1" id="GoZDxL1e8JKUYFKXHwkY">
+    <mxGraphModel dx="583" dy="580" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="gqriCwj_FKO2qEpEH36c-1" value="Developer 1&lt;div&gt;`feature` branch&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="430" y="220" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gqriCwj_FKO2qEpEH36c-2" value="Developer 2&lt;div&gt;`fix` branch&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="430" y="320" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gqriCwj_FKO2qEpEH36c-3" value="Developer 3&lt;div&gt;`feature` branch&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="430" y="420" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gqriCwj_FKO2qEpEH36c-4" value="Pull request to `develop` branch" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="650" y="320" width="130" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gqriCwj_FKO2qEpEH36c-5" value="CI&lt;div&gt;Restore, Test, Build, Publish&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="880" y="320" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gqriCwj_FKO2qEpEH36c-6" value="Return to&lt;div&gt;developer&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1110" y="220" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gqriCwj_FKO2qEpEH36c-7" value="Merge into&lt;div&gt;`develop` branch&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1110" y="420" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gqriCwj_FKO2qEpEH36c-8" value="Build Test&lt;div&gt;release artifact&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1330" y="420" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gqriCwj_FKO2qEpEH36c-9" value="Deploy to Test" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1550" y="420" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gqriCwj_FKO2qEpEH36c-10" value="Database Migration" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1770" y="420" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gqriCwj_FKO2qEpEH36c-11" value="Start Test&lt;div&gt;Windows Service&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1990" y="420" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gqriCwj_FKO2qEpEH36c-12" value="API Endpoints&lt;div&gt;Validation&lt;span style=&quot;color: rgba(0, 0, 0, 0); font-family: monospace; font-size: 0px; text-align: start; text-wrap-mode: nowrap; background-color: transparent;&quot;&gt;%3CmxGraphModel%3E%3Croot%3E%3CmxCell%20id%3D%220%22%2F%3E%3CmxCell%20id%3D%221%22%20parent%3D%220%22%2F%3E%3CmxCell%20id%3D%222%22%20value%3D%22Start%20Test%26lt%3Bdiv%26gt%3BWindows%20Service%26lt%3B%2Fdiv%26gt%3B%22%20style%3D%22rounded%3D0%3BwhiteSpace%3Dwrap%3Bhtml%3D1%3B%22%20vertex%3D%221%22%20parent%3D%221%22%3E%3CmxGeometry%20x%3D%221990%22%20y%3D%22420%22%20width%3D%22120%22%20height%3D%2260%22%20as%3D%22geometry%22%2F%3E%3C%2FmxCell%3E%3C%2Froot%3E%3C%2FmxGraphModel%3E&lt;/span&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2210" y="420" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gqriCwj_FKO2qEpEH36c-13" value="Pull request&lt;div&gt;`develop` to `main`&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2410" y="320" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gqriCwj_FKO2qEpEH36c-14" value="Investigate or&lt;div&gt;restore backup&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2410" y="520" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gqriCwj_FKO2qEpEH36c-15" value="CI validation" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2650" y="320" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gqriCwj_FKO2qEpEH36c-16" value="Merge into `main`" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2890" y="320" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="gqriCwj_FKO2qEpEH36c-17" value="Merge into `main`" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="3130" y="320" width="120" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
