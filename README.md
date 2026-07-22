@@ -107,7 +107,7 @@ In an organisational setup, both `develop` and `main` should be protected branch
 
 ## CI/CD Flow
 
-Insert flowchart
+<img width="511" height="1461" alt="CICD Pipeline Flowchart - Vertical" src="https://github.com/user-attachments/assets/fe61fbcf-ca3e-4d66-8d04-6882ac1c7d84" />
 
 ## GitHub Actions Workflows
 
